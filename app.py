@@ -3,6 +3,16 @@ from streamlit_embedcode import github_gist
 import numpy as np
 import pandas as pd
 import pickle
+from sklearn import ensemble
+
+df2 = pd.read_csv('Preprocessed_Life_Expectancy_Data.csv')
+df2 = df2. drop('Unnamed: 0', axis=1)
+
+X = df2.drop('life_expectancy', axis = 1) 
+y = df2['life_expectancy']
+
+model = ensemble.ExtraTreesRegressor(random_state = 42, bootstrap = False, max_depth = 890, max_features = 'auto', min_samples_leaf = 1, min_samples_split = 5, n_estimators = 1400)
+model.fit(X, y)
 
 st.title("Prediction of Life Expectancy from Socio-Economic & Health Factors")
 
@@ -656,18 +666,7 @@ elif choice == 'Predict Life Expectancy':
     
     #-----------------------------------------------------------------------------------
     
-    import pandas as pd
-    import numpy as np
 
-    df2 = pd.read_csv('Preprocessed_Life_Expectancy_Data.csv')
-    df2 = df2. drop('Unnamed: 0', axis=1)
-
-    X = df2.drop('life_expectancy', axis = 1) 
-    y = df2['life_expectancy']
-
-    from sklearn import ensemble
-    extra = ensemble.ExtraTreesRegressor(random_state = 42, bootstrap = False, max_depth = 890, max_features = 'auto', min_samples_leaf = 1, min_samples_split = 5, n_estimators = 1400)
-    extra.fit(X, y)
 
     # -----------------------------------------------------------------------------------
 
@@ -676,8 +675,7 @@ elif choice == 'Predict Life Expectancy':
     st.subheader('   ')
 
     if st.button('Predict'):
-       #prediction = model.predict(final_features)
-       prediction = extra.predict(final_features)
+       prediction = model.predict(final_features)
        st.success(f'Predicted life expectancy is : {round(prediction[0], 1)} years')
 
 elif choice == "Model Performance Metrics":
