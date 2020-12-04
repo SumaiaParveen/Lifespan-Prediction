@@ -659,11 +659,11 @@ elif choice == 'Predict Life Expectancy':
     import pandas as pd
     import numpy as np
 
-    df = pd.read_csv('Preprocessed_Life_Expectancy_Data.csv')
-    df = df. drop('Unnamed: 0', axis=1)
+    df2 = pd.read_csv('Preprocessed_Life_Expectancy_Data.csv')
+    df2 = df2. drop('Unnamed: 0', axis=1)
 
-    X = df.drop('life_expectancy', axis = 1) 
-    y = df['life_expectancy']
+    X = df2.drop('life_expectancy', axis = 1) 
+    y = df2['life_expectancy']
 
     from sklearn import ensemble
     extra = ensemble.ExtraTreesRegressor(random_state = 42, bootstrap = False, max_depth = 890, max_features = 'auto', min_samples_leaf = 1, min_samples_split = 5, n_estimators = 1400)
