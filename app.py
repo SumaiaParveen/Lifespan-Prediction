@@ -1,18 +1,21 @@
 import streamlit as st
-from streamlit_embedcode import github_gist
 import numpy as np
 import pandas as pd
-import pickle
 from sklearn import ensemble
+
+# ---------- Extratree Regressor ------------
 
 df2 = pd.read_csv('Preprocessed_Life_Expectancy_Data.csv')
 df2 = df2. drop('Unnamed: 0', axis=1)
+df2 = df2. drop('year', axis=1)
 
 X = df2.drop('life_expectancy', axis = 1) 
 y = df2['life_expectancy']
 
-model = ensemble.ExtraTreesRegressor(random_state = 42, bootstrap = False, max_depth = 890, max_features = 'auto', min_samples_leaf = 1, min_samples_split = 5, n_estimators = 1400)
+model = ensemble.ExtraTreesRegressor(random_state = 25)
 model.fit(X, y)
+
+# ---------- Extratree Regressor ------------
 
 st.title("Prediction of Life Expectancy from Socio-Economic & Health Factors")
 
@@ -25,33 +28,24 @@ choice = st.sidebar.selectbox("Menu", menu)
 
 if choice == "About the App":
     
-    option = ["What it Does?", "About the Dataset", "Data Preprocessing", 'Exploratory Data Analysis', 'Model Development & Evaluation']
+    option = ["About the Lifespan Prediction App", 'Exploratory Data Analysis']
     select = st.selectbox("Menu", option)
-    if select == "What it Does?":
-        st.subheader("About")
-        st.markdown('WHO and UN created a dataset of the social, economic, and health-related status of 193 countries over the period  2000-2015. The dataset includes statistics on life expectancy, adult mortality, and more. We want to see how the predictors are related to each other and also with the target variable- human life expectancy. We also will predict life expectancy using a machine learning algorithm. ')
-
-    elif select == "About the Dataset":
-        st.subheader("Context")
-        st.markdown('Although there have been a lot of studies undertaken in the past on factors affecting life expectancy considering demographic variables, income composition, and mortality rates. It was found that the effect of immunization and human development index was not taken into account in the past. Also, some of the past research was done considering multiple linear regression based on the data set of one year for all the countries. Hence, this gives the motivation to resolve both the factors stated previously by formulating a regression model based on the mixed-effects model and multiple linear regression while considering data from a period of 2000 to 2015 for all the countries. Important immunization like Hepatitis B, Polio, and Diphtheria will also be considered. In a nutshell, this study will focus on immunization factors, mortality factors, economic factors, social factors, and other health-related factors as well. Since the observations this dataset is based on different countries, it will be easier for a country to determine the predicting factor which is contributing to lower the value of life expectancy. This will help in suggesting a country in which areas should be given importance to efficiently improve the life expectancy of its population.')
-        st.subheader("Content")
-        st.markdown("The project relies on the accuracy of the data. The Global Health Observatory (GHO) data repository under World Health Organization (WHO) keeps track of the health status as well as many other related factors for all countries The data-sets are made available to the public for health data analysis. The data-set related to life expectancy, health factors for 193 countries have been collected from the same WHO data repository website, and its corresponding economic data was collected from the United Nations website. Among all categories of health-related factors, only those critical factors were chosen which are more representative. It has been observed that in the past 15 years, there has been a huge development in the health sector resulting in the improvement of human mortality rates especially in the developing nations in comparison to the past 30 years. Therefore, in this project, we have considered data from the year 2000-2015 for 193 countries for further analysis. The individual data files have been merged into a single data-set. On initial visual inspection of the data showed some missing values. As the data-sets were from WHO, we found no evident errors. Missing data were handled in R software by using the Missmap command. The result indicated that most of the missing data were for population, Hepatitis B, and GDP. The missing data were from less known countries like Vanuatu, Tonga, Togo, Cabo Verde, etc. Finding all data for these countries was difficult and hence, it was decided that we exclude these countries from the final model data-set. The final merged file(final dataset) consists of 22 Columns and 2938 rows which meant 20 predicting variables. All predicting variables were then divided into several broad categories:​Immunization related factors, Mortality factors, Economical factors, and Social factors.")
+    if select == "About the Lifespan Prediction App":
+        st.subheader("About the Application")
+        st.markdown('WHO and the UN created a dataset of the social, economic, and health-related status of 193 countries over the period  2000-2015. The dataset includes statistics on life expectancy, adult mortality, and more. This tool shows the relationship between different features and how they impact the target variable- Life Expectancy (years). A regression technique is employed to predict the target variable.')
+        st.subheader('About the Dataset')
+        st.markdown('There has been a huge development in the health sector resulting in the improvement of human mortality rates especially in the developing nations in the past 15 years in comparison to the past 30 years. Therefore,  this dataset contains records over the years 2000-2015 for 193 countries. It provides data on immunization factors, mortality factors, economic factors, social factors, and other health-related factors that control the rate of human mortality. ')
+        st.subheader('Acknowledgement')
+        st.markdown('The data was collected from the WHO and United Nations websites with the help of Deeksha Russell and Duan Wang. Kaggle made the dataset available for us. ')
         st.subheader("Link to Dataset")
         st.markdown('More info can be found on kaggle. https://www.kaggle.com/kumarajarshi/life-expectancy-who')
 
-    elif select == "Data Preprocessing":
-        st.subheader("Major Steps")
-        st.markdown('1. Data Cleaning')
-        st.markdown('2. Handling Missing Values: Random Sample Imputation')
-        st.markdown('3. Ordinal and Nominal Encoding of the categorical columns: df.status and df.countries')
-
-        github_gist("https://gist.github.com/SumaiaParveen/33245edb50afe44a54dd1f008b80cbd7")
 
     elif select == 'Exploratory Data Analysis':
         st.subheader("Govt's Healthcare Expenditure Rate and People's Life Expectancy")
         from PIL import Image
         img = Image.open("Image/exp_le.png")
-        st.image(img, width=800)
+        st.image(img,)
 
         st.markdown("1. A large portion of the dataset suggests that approximately 10% of expense implies an average life expectancy of 80 years.")
         st.markdown("2. Couple of 90 years life expectancy are observed where the healthcare expense rates are ~1% and ~8.5%")
@@ -60,7 +54,7 @@ if choice == "About the App":
         st.subheader("Realtionship of Life Expectancy and Human Development Index, GDP and Education")
         from PIL import Image
         img = Image.open("Image/gdp_sc_le.png")
-        st.image(img, width=700)
+        st.image(img, )
 
         st.markdown("1. More years spent in the school implies higher life expectancy.")
         st.markdown("2. GDP of the people/countries are mostly distributed around USD 1000.")
@@ -69,21 +63,21 @@ if choice == "About the App":
         st.subheader("Relationship of Life Expectancy with Mortality Rates")
         from PIL import Image
         img = Image.open("Image/mort.png")
-        st.image(img, width=800)
+        st.image(img, )
 
         st.markdown("1. Apparently, high mortality rate implies poor healthcare system and thus shorter life expectancy.")
 
         st.subheader("Relationship of Life Expectancy with Immunization Coverage")
         from PIL import Image
         img = Image.open("Image/imm.png")
-        st.image(img, width=800)
+        st.image(img,)
 
         st.markdown("1. Low rate of immunization coverages implies shorter life expectancy and vice versa.")
 
         st.subheader("BMI vs Life Expectancy")
         from PIL import Image
         img = Image.open("Image/bmi.png")
-        st.image(img, width=500)
+        st.image(img,)
 
         st.markdown("1. Most of the people have BMI around 55 and their apprximate life expectancy is 75 years.")
         st.markdown("2. A smaller group of people have BMI between (0-30) and their apprximate life expectancy is 62 years.")
@@ -91,53 +85,18 @@ if choice == "About the App":
         st.subheader("Average Life Expectancy of the Developing and Develpoed Countries")
         from PIL import Image
         img = Image.open("Image/stat.png")
-        st.image(img, width=500)
+        st.image(img, )
 
         st.markdown("1. The people of developed countries may live approximately 10 years longer than the people from developing countries.")
         
         st.subheader("Life Expectancy and Alcohol Consumption")
         from PIL import Image
         img = Image.open("Image/alco.png")
-        st.image(img, width=800)
+        st.image(img,)
 
         st.markdown("1. Higher life expectancy (almost 90 years long) with average 8.5 liters of pure alcohol.")
         st.markdown("2. A number of people drink less than 2.5 liters of alcohol and their average life expectancy is approximately 72 years.")
 
-        #github_gist("https://gist.github.com/SumaiaParveen/1c765703a41ace8a19e3bd3ad2cd7cd0")
-
-    elif select == 'Model Development & Evaluation':
-
-        st.subheader("Model Selection")
-        # Images
-        from PIL import Image
-        img = Image.open("Image/mod_sel.png")
-        st.image(img, caption="LazyRegressor Result")
-
-        st.subheader("Model Development: Optimized ExtraTressRegressor")
-        st.markdown("Hyperparameters are optimized using RandomizedSearchCV. The best parameters are follows:")
-        img = Image.open("Image/best_p.png")
-        st.image(img, caption="Best Parameters found from RandomizedSearchCV Training")
-
-        
-        st.subheader("Model Evaluation")
-
-        st.markdown('Mean absolute error (MAE): 1.0564712470881465') 
-        st.markdown('Mean squared error (MSE): 3.2797066467789717')
-        st.markdown('Root mean squared error (RMSE): 1.8109960372068659')
-        st.markdown('R Squared: 0.9648817803845204')
-        st.markdown('Adjusted R Squared: 0.9640212405806405')
-        st.markdown('Accuracy (Computed from Actual & Predicted-- please see code**): 98.368%')
-
-        img = Image.open("Image/dist_ev.png")
-        st.image(img,  width=600, caption="Distribution Plot")
-
-        img = Image.open("Image/residuals.png")
-        st.image(img,  width=600, caption="Residual Plot")
-
-        img = Image.open("Image/err.png")
-        st.image(img,  width=600, caption="Error Plot")
-
-        github_gist("https://gist.github.com/SumaiaParveen/f89e2f087a5c74cfe4d8e83bc90d2a76")
 
     else:
         st.markdown('          ')
@@ -563,8 +522,6 @@ elif choice == 'Predict Life Expectancy':
         else:
             st.markdown("Not selected within the given 193 countries")
 
-    if st.subheader("Year"):
-        year = st.number_input('Year')
 
     if st.subheader("Economic Status of the Country"):
         data_dim = st.radio("Show Dimension By ", ("Developing", "Developed"))
@@ -630,12 +587,11 @@ elif choice == 'Predict Life Expectancy':
         schooling = st.number_input('Number of years of Schooling(years)')
 
 
-    feat = [country, year, status, adult_mortality, infant_deaths, alcohol,
+    feat = [country, status, adult_mortality, infant_deaths, alcohol,
     percentage_expenditure, hepatitis_b, measles, bmi, under_five_deaths, polio,
     total_expenditure, diphtheria, hiv_aids, gdp, population, thinness_1_19_years, thinness_5_9_years, income_composition_of_resources, schooling]
 
     data = {'country': country, 
-            'year': year, 
             'status': status, 
             'adult_mortality': adult_mortality, 
             'infant_deaths': infant_deaths, 
@@ -664,13 +620,6 @@ elif choice == 'Predict Life Expectancy':
     feat = [(x) for x in feat]
     final_features = [np.array(feat)]
     
-    #-----------------------------------------------------------------------------------
-    
-
-
-    # -----------------------------------------------------------------------------------
-
-    # model = pickle.load(open('ExtraTrees_Life_Expectancy.pkl', 'rb'))  # get the model
 
     st.subheader('   ')
 
@@ -680,16 +629,26 @@ elif choice == 'Predict Life Expectancy':
 
 elif choice == "Model Performance Metrics":
     st.subheader("Model Performance Metrics")
-    st.info('Mean absolute error (MAE): 1.0564712470881465') 
-    st.info('Mean squared error (MSE): 3.2797066467789717')
-    st.info('Root mean squared error (RMSE): 1.8109960372068659')
-    st.info('R Squared: 0.9648817803845204')
-    st.info('Adjusted R Squared: 0.9640212405806405')
-    st.info('Accuracy (Computed from Actual & Predicted-- please see code**): 98.368%')
+    st.info('Mean absolute error (MAE): 1.0727') 
+    st.info('Mean squared error (MSE): 3.2753')
+    st.info('Root mean squared error (RMSE): 1.8098')
+    st.info('R Squared: 0.9649')
+    st.info('Adjusted R Squared: 0.9641')
+    st.subheader('   ')
+    
+    
+    from PIL import Image
+    img = Image.open("Image/dist_ev.png")
+    st.image(img,  caption="Distribution Plot")
+
+    from PIL import Image
+    img = Image.open("Image/residuals.png")
+    st.image(img,  caption="Residual Plot")
+
+    from PIL import Image
+    img = Image.open("Image/err.png")
+    st.image(img,  caption="Error Plot")
+
 
 else:
     st.markdown('  ')
-    
-
-
-
